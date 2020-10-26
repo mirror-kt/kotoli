@@ -22,7 +22,6 @@ private fun roleInfoDispatcher(event: CommandEvent) {
 private fun onRoleRank(event: RoleRankEvent) {
     event.guild.loadMembers()
         .onSuccess {
-            println("onRoleRank")
             val embed = EmbedBuilder().apply {
                 val rolesMap = it.sortedByDescending { member -> member.roles.size }
                     .take(10)

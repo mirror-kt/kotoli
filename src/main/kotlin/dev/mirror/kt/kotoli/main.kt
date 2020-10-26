@@ -18,5 +18,9 @@ fun main() {
         roleRank()
     }
 
+    Runtime.getRuntime().addShutdownHook(Thread {
+        bot.shutdown()
+    })
+
     bot.start()
 }
