@@ -2,6 +2,7 @@ package dev.mirror.kt.kotoli
 
 import dev.mirror.kt.kotoli.command.pingPong
 import dev.mirror.kt.kotoli.command.roleInfo
+import dev.mirror.kt.kotoli.command.roleRank
 import dev.mirror.kt.kotoli.framework.Bot
 import net.dv8tion.jda.api.requests.GatewayIntent
 
@@ -14,6 +15,7 @@ fun main() {
     ).apply {
         pingPong()
         roleInfo()
+        roleRank()
     }
 
     bot.start()
