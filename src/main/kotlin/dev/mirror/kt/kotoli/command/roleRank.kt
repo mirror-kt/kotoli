@@ -1,7 +1,7 @@
 package dev.mirror.kt.kotoli.command
 
 import dev.mirror.kt.kotoli.framework.Bot
-import dev.mirror.kt.kotoli.framework.event.MessageEvent
+import dev.mirror.kt.kotoli.framework.event.CommandEvent
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
@@ -13,7 +13,7 @@ fun Bot.roleRank() {
     register(::onRoleRank)
 }
 
-private fun roleInfoDispatcher(event: MessageEvent) {
+private fun roleInfoDispatcher(event: CommandEvent) {
     if (event.content.toLowerCase() == "rolerank") {
         event.eventBus.dispatch(RoleRankEvent(event.discordEvent.guild, event.discordEvent.channel))
     }

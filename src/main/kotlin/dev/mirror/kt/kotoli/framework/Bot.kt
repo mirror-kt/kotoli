@@ -1,6 +1,6 @@
 package dev.mirror.kt.kotoli.framework
 
-import dev.mirror.kt.kotoli.framework.event.MessageEvent
+import dev.mirror.kt.kotoli.framework.event.CommandEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -33,7 +33,7 @@ class Bot private constructor(
     init {
         register<GuildMessageReceivedEvent> {
             if (!it.message.contentRaw.startsWith("kt!")) return@register
-            eventBus.dispatch(MessageEvent(it, it.message.contentRaw.substring("kt!".length), eventBus))
+            eventBus.dispatch(CommandEvent(it, it.message.contentRaw.substring("kt!".length), eventBus))
         }
     }
 

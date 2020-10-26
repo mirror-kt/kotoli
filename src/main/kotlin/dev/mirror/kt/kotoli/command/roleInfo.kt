@@ -1,7 +1,7 @@
 package dev.mirror.kt.kotoli.command
 
 import dev.mirror.kt.kotoli.framework.Bot
-import dev.mirror.kt.kotoli.framework.event.MessageEvent
+import dev.mirror.kt.kotoli.framework.event.CommandEvent
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 
@@ -15,7 +15,7 @@ fun Bot.roleInfo() {
     register(::onRoleInfo)
 }
 
-private fun roleInfoDispatcher(event: MessageEvent) {
+private fun roleInfoDispatcher(event: CommandEvent) {
     if (event.content.toLowerCase().startsWith("roleinfo")) {
         val roleName = event.content.substring("roleinfo ".length)
 

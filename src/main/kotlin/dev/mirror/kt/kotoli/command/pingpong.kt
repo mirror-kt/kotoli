@@ -1,7 +1,7 @@
 package dev.mirror.kt.kotoli.command
 
 import dev.mirror.kt.kotoli.framework.Bot
-import dev.mirror.kt.kotoli.framework.event.MessageEvent
+import dev.mirror.kt.kotoli.framework.event.CommandEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
 
 data class PingPongEvent(
@@ -13,7 +13,7 @@ fun Bot.pingPong() {
     register(::onPingPong)
 }
 
-private fun pingPongDispatcher(event: MessageEvent) {
+private fun pingPongDispatcher(event: CommandEvent) {
     if (event.content == "ping") {
         event.eventBus.dispatch(PingPongEvent(event.discordEvent))
     }
