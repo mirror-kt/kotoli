@@ -3,6 +3,7 @@ package dev.mirror.kt.kotoli.framework
 import dev.mirror.kt.kotoli.framework.event.MessageEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import net.dv8tion.jda.api.JDA
@@ -31,7 +32,8 @@ class Bot private constructor(
 
     init {
         register<GuildMessageReceivedEvent> {
-            eventBus.dispatch(MessageEvent(it, eventBus))
+            if (!it.message.contentRaw.startsWith("kt!")) return@register
+            eventBus.dispatch(MessageEvent(it, it.message.contentRaw.substring("kt!".length), eventBus))
         }
     }
 
@@ -50,5 +52,6 @@ class Bot private constructor(
 
     fun shutdown() {
         jda.shutdown()
+        cancel()
     }
 }
