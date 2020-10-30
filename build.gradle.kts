@@ -18,5 +18,11 @@ dependencies {
 }
 
 application {
-    mainClassName = "dev.mirror.kt.kotoli.main"
+    mainClassName = "dev.mirror.kt.kotoli.MainKt"
+}
+
+tasks {
+    distTar {
+        archiveFileName.set("kotoli.tar")
+    }
 }
