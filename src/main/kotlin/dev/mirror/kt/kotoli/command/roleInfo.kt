@@ -42,7 +42,7 @@ private fun onRoleInfo(event: RoleInfoEvent) {
             ${roles.joinToString("\n")}
             ```
         """.trimIndent()
-        )
+        ).queue()
         return
     }
 
