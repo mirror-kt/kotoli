@@ -16,7 +16,7 @@ fun Bot.roleInfo() {
 }
 
 private fun roleInfoDispatcher(event: CommandEvent) {
-    if (event.content.toLowerCase().startsWith("roleinfo")) {
+    if (event.content.toLowerCase().startsWith("roleinfo ")) {
         val roleName = event.content.substring("roleinfo ".length)
 
         event.eventBus.dispatch(RoleInfoEvent(event.discordEvent, roleName))
