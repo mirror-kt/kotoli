@@ -1,0 +1,21 @@
+name: Assemble
+
+on: [push]
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JDK
+        uses: AdoptOpenJDK/install-jdk@v1
+        with:
+          version: '11'
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Run ./gradlew --no-daemon assemble
+        run: ./gradlew --no-daemon assemble
