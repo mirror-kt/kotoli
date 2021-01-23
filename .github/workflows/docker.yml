@@ -3,7 +3,7 @@ name: Docker
 on:
   push:
     branches:
-      - master
+      - main
     tags:
       - v*
 
@@ -28,6 +28,6 @@ jobs:
           IMAGE_ID=ghcr.io/${{ github.actor }}/$IMAGE_NAME
           VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          [ "$VERSION" == "master" ] && VERSION=latest
+          [ "$VERSION" == "main" ] && VERSION=latest
           docker tag app $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
