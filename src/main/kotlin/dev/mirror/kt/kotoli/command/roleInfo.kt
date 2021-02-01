@@ -50,7 +50,9 @@ private fun onRoleInfo(event: RoleInfoEvent) {
     event.discordEvent.guild.findMembers { it.roles.contains(role) }
         .onSuccess {
             val embed = EmbedBuilder().apply {
-                addField("メンバー", it.joinToString("\n") { it.nickname ?: it.effectiveName }, false)
+                setTitle("${role.name}の詳細")
+                addField("メンバー(${it.size}人)", it.joinToString("\n") { it.nickname ?: it.effectiveName }, false)
+                setColor(role.color)
             }
             event.discordEvent.channel.sendMessage(embed.build()).queue()
         }
