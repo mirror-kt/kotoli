@@ -28,6 +28,7 @@ private fun onRoleRank(event: RoleRankEvent) {
                     .map { member -> (member.nickname ?: member.effectiveName) to member.roles.size }
                     .toMap()
 
+                setTitle("ロール数ランキング(TOP10)")
                 addField("名前", rolesMap.keys.joinToString("\n"), true)
                 addField("権限数", rolesMap.values.joinToString("\n"), true)
             }
