@@ -1,59 +1,38 @@
 package dev.mirror.kt.kotoli.command
 
-import dev.mirror.kt.kotoli.framework.Bot
-import dev.mirror.kt.kotoli.framework.event.CommandEvent
-import net.dv8tion.jda.api.EmbedBuilder
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent
+import dev.kord.common.annotation.KordPreview
+import dev.kord.common.entity.snowflake
+import dev.kord.core.behavior.respond
+import dev.kord.core.event.interaction.InteractionCreateEvent
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.toList
 
-data class RoleInfoEvent(
-    val discordEvent: GuildMessageReceivedEvent,
-    val roleNamePattern: String
-)
+@OptIn(KordPreview::class)
+suspend fun InteractionCreateEvent.onRoleInfo() {
+    val roleId = interaction.command
+        .options["role"]
+        ?.snowflake()
 
-fun Bot.roleInfo() {
-    register(::roleInfoDispatcher)
-    register(::onRoleInfo)
-}
-
-private fun roleInfoDispatcher(event: CommandEvent) {
-    if (event.content.toLowerCase().startsWith("roleinfo ")) {
-        val roleName = event.content.substring("roleinfo ".length)
-
-        event.eventBus.dispatch(RoleInfoEvent(event.discordEvent, roleName))
-    }
-}
-
-private fun onRoleInfo(event: RoleInfoEvent) {
-    val roles = event.discordEvent.guild.roles
-        .let {
-            it.filter { role -> role.name == event.roleNamePattern }
-                .ifEmpty { it.filter { role -> role.name.startsWith(event.roleNamePattern) } }
-        }
-
-    if (roles.isEmpty()) {
-        event.discordEvent.channel.sendMessage("権限が見つかりませんでした").queue()
-        return
-    }
-    if (roles.size > 1) {
-        event.discordEvent.channel.sendMessage(
-            """
-            該当する権限が複数ありました
-            ```
-            ${roles.joinToString("\n")}
-            ```
-        """.trimIndent()
-        ).queue()
-        return
-    }
-
-    val role = roles.single()
-    event.discordEvent.guild.findMembers { it.roles.contains(role) }
-        .onSuccess {
-            val embed = EmbedBuilder().apply {
-                setTitle("${role.name}の詳細")
-                addField("メンバー(${it.size}人)", it.joinToString("\n") { it.nickname ?: it.effectiveName }, false)
-                setColor(role.color)
+    val role = roleId?.let { id -> interaction.guild.getRoleOrNull(id) }
+        ?: run {
+            interaction.respond(true) {
+                content = "権限が見つかりませんでした"
             }
-            event.discordEvent.channel.sendMessage(embed.build()).queue()
+            return
         }
+
+    val members = interaction.guild
+        .members
+        .filter { it.roleIds.contains(roleId) }
+        .toList()
+
+    interaction.respond {
+        embed {
+            title = "${role.name}の詳細"
+            color = role.color
+            field("メンバー(${members.size}人)", false) {
+                members.joinToString("\n") { it.displayName }
+            }
+        }
+    }
 }
