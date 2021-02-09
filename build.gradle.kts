@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm") version "1.4.30"
     application
@@ -24,5 +26,11 @@ application {
 tasks {
     distTar {
         archiveFileName.set("kotoli.tar")
+    }
+
+    withType<KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
     }
 }

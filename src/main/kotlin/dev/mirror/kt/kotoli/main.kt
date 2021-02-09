@@ -1,26 +1,36 @@
 package dev.mirror.kt.kotoli
 
-import dev.mirror.kt.kotoli.command.pingPong
-import dev.mirror.kt.kotoli.command.roleInfo
-import dev.mirror.kt.kotoli.command.roleRank
-import dev.mirror.kt.kotoli.framework.Bot
-import net.dv8tion.jda.api.requests.GatewayIntent
+import dev.kord.common.annotation.KordPreview
+import dev.kord.core.Kord
+import dev.kord.core.event.interaction.InteractionCreateEvent
+import dev.kord.core.on
+import dev.kord.gateway.Intent
+import dev.kord.gateway.Intents
+import dev.kord.gateway.PrivilegedIntent
+import dev.mirror.kt.kotoli.command.onRoleInfo
+import dev.mirror.kt.kotoli.command.onRoleRank
+import kotlinx.coroutines.runBlocking
 
-fun main() {
-    val bot = Bot.create(
-        System.getenv("DISCORD_TOKEN"), listOf(
-            GatewayIntent.GUILD_MESSAGES,
-            GatewayIntent.GUILD_MEMBERS
+@OptIn(KordPreview::class, PrivilegedIntent::class)
+suspend fun main() {
+    val client = Kord(System.getenv("DISCORD_TOKEN")) {
+        intents = Intents(
+            Intent.GuildMembers
         )
-    ).apply {
-        pingPong()
-        roleInfo()
-        roleRank()
+    }
+
+    client.on<InteractionCreateEvent> {
+        when(interaction.command.name) {
+            "roleinfo" -> onRoleInfo()
+            "rolerank" -> onRoleRank()
+        }
     }
 
     Runtime.getRuntime().addShutdownHook(Thread {
-        bot.shutdown()
+        runBlocking {
+            client.logout()
+        }
     })
 
-    bot.start()
+    client.login()
 }
