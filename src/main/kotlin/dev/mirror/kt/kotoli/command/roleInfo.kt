@@ -2,8 +2,10 @@ package dev.mirror.kt.kotoli.command
 
 import dev.kord.common.annotation.KordPreview
 import dev.kord.common.entity.snowflake
+import dev.kord.core.behavior.channel.createEmbed
 import dev.kord.core.behavior.respond
 import dev.kord.core.event.interaction.InteractionCreateEvent
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
 
@@ -21,18 +23,19 @@ suspend fun InteractionCreateEvent.onRoleInfo() {
             return
         }
 
+    println("onRoleInfo")
+
     val members = interaction.guild
         .members
+        .buffer(200)
         .filter { it.roleIds.contains(roleId) }
         .toList()
 
-    interaction.respond {
-        embed {
-            title = "${role.name}の詳細"
-            color = role.color
-            field("メンバー(${members.size}人)", false) {
-                members.joinToString("\n") { it.displayName }
-            }
+    interaction.channel.createEmbed {
+        title = "${role.name}の詳細"
+        color = role.color
+        field("メンバー(${members.size}人)", false) {
+            members.joinToString("\n") { it.displayName }
         }
     }
 }
