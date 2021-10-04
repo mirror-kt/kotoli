@@ -16,7 +16,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-    implementation("dev.kord:kord-core:0.7.0-SNAPSHOT")
+    implementation("dev.kord:kord-core:395-lazy-intents-SNAPSHOT")
 }
 
 application {
